@@ -17,7 +17,7 @@ namespace Microsoft.PowerShell.EditorServices.Test.Host
     {
         private DebugAdapterClient debugAdapterClient;
         private string DebugScriptPath = 
-            Path.GetFullPath(@"..\..\..\PowerShellEditorServices.Test.Shared\Debugging\DebugTest.ps1");
+            Path.GetFullPath(@"..\..\..\Microsoft.PowerShell.EditorServices.Test.Shared\Debugging\DebugTest.ps1");
 
         public Task InitializeAsync()
         {

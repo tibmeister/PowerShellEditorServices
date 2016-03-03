@@ -6,14 +6,14 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{3A5DDD20-5BD0-42F4-89F4-ACC0CE554028}</ProjectGuid>
+    <ProjectGuid>{E3A5CF5D-6E41-44AC-AE0A-4C227E4BACD4}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Microsoft.PowerShell.EditorServices.Test.Host</RootNamespace>
-    <AssemblyName>Microsoft.PowerShell.EditorServices.Test.Host</AssemblyName>
+    <RootNamespace>Microsoft.PowerShell.EditorServices.Test.Protocol</RootNamespace>
+    <AssemblyName>Microsoft.PowerShell.EditorServices.Test.Protocol</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <NuGetPackageImportStamp>a9d53c86</NuGetPackageImportStamp>
+    <NuGetPackageImportStamp>69e9ba79</NuGetPackageImportStamp>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
   </PropertyGroup>
@@ -35,10 +35,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -46,6 +42,10 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="xunit.abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
       <HintPath>..\..\packages\xunit.abstractions.2.0.0\lib\net35\xunit.abstractions.dll</HintPath>
       <Private>True</Private>
@@ -64,58 +64,25 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AttachHelper.cs" />
-    <Compile Include="DebugAdapterTests.cs" />
-    <Compile Include="OutputReader.cs" />
+    <Compile Include="DebugAdapter\V8MessageSerializerTests.cs" />
+    <Compile Include="LanguageServer\JsonRpcMessageSerializerTests.cs" />
+    <Compile Include="Message\MessageReaderWriterTests.cs" />
+    <Compile Include="Message\TestMessageTypes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="LanguageServerTests.cs" />
-    <Compile Include="ServerTestsBase.cs" />
+    <Compile Include="Server\OutputDebouncerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
-    <None Include="TestFiles\CompleteFunctionName.ps1">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="TestFiles\FindReferences.ps1">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="TestFiles\MultiLineReplace.ps1">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="TestFiles\SimpleSemanticError.ps1">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="TestFiles\SimpleSyntaxError.ps1">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="xunit.runner.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="envdte, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </Reference>
-    <ProjectReference Include="..\..\src\PowerShellEditorServices.Host\PowerShellEditorServices.Host.csproj">
-      <Project>{b2f6369a-d737-4afd-8b81-9b094db07da7}</Project>
-      <Name>PowerShellEditorServices.Host</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\PowerShellEditorServices.Protocol\PowerShellEditorServices.Protocol.csproj">
+    <ProjectReference Include="..\..\src\Microsoft.PowerShell.EditorServices.Protocol\PowerShellEditorServices.Protocol.csproj">
       <Project>{f8a0946a-5d25-4651-8079-b8d5776916fb}</Project>
       <Name>PowerShellEditorServices.Protocol</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\PowerShellEditorServices\PowerShellEditorServices.csproj">
+    <ProjectReference Include="..\..\src\Microsoft.PowerShell.EditorServices\PowerShellEditorServices.csproj">
       <Project>{81e8cbcd-6319-49e7-9662-0475bd0791f4}</Project>
       <Name>PowerShellEditorServices</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\submodules\PSScriptAnalyzer\Engine\ScriptAnalyzerEngine.csproj">
-      <Project>{f4bde3d0-3eef-4157-8a3e-722df7adef60}</Project>
-      <Name>ScriptAnalyzerEngine</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\submodules\PSScriptAnalyzer\Rules\ScriptAnalyzerBuiltinRules.csproj">
-      <Project>{c33b6b9d-e61c-45a3-9103-895fd82a5c1e}</Project>
-      <Name>ScriptAnalyzerBuiltinRules</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

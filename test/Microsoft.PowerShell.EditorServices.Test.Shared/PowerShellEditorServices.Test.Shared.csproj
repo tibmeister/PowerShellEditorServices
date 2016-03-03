@@ -71,7 +71,7 @@
     <None Include="Symbols\NoSymbols.ps1" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\PowerShellEditorServices\PowerShellEditorServices.csproj">
+    <ProjectReference Include="..\..\src\Microsoft.PowerShell.EditorServices\PowerShellEditorServices.csproj">
       <Project>{81e8cbcd-6319-49e7-9662-0475bd0791f4}</Project>
       <Name>PowerShellEditorServices</Name>
     </ProjectReference>

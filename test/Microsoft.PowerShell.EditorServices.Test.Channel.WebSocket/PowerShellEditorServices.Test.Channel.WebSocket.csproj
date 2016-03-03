@@ -88,19 +88,19 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\PowerShellEditorServices.Channel.WebSocket\PowerShellEditorServices.Channel.WebSocket.csproj">
+    <ProjectReference Include="..\..\src\Microsoft.PowerShell.EditorServices.Channel.WebSocket\PowerShellEditorServices.Channel.WebSocket.csproj">
       <Project>{a6663f64-3c3d-461f-8a05-0cc4ca7a9945}</Project>
       <Name>PowerShellEditorServices.Channel.WebSocket</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\PowerShellEditorServices.Host\PowerShellEditorServices.Host.csproj">
+    <ProjectReference Include="..\..\src\Microsoft.PowerShell.EditorServices.Host\PowerShellEditorServices.Host.csproj">
       <Project>{b2f6369a-d737-4afd-8b81-9b094db07da7}</Project>
       <Name>PowerShellEditorServices.Host</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\PowerShellEditorServices.Protocol\PowerShellEditorServices.Protocol.csproj">
+    <ProjectReference Include="..\..\src\Microsoft.PowerShell.EditorServices.Protocol\PowerShellEditorServices.Protocol.csproj">
       <Project>{f8a0946a-5d25-4651-8079-b8d5776916fb}</Project>
       <Name>PowerShellEditorServices.Protocol</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\PowerShellEditorServices\PowerShellEditorServices.csproj">
+    <ProjectReference Include="..\..\src\Microsoft.PowerShell.EditorServices\PowerShellEditorServices.csproj">
       <Project>{81e8cbcd-6319-49e7-9662-0475bd0791f4}</Project>
       <Name>PowerShellEditorServices</Name>
     </ProjectReference>

@@ -303,7 +303,7 @@ namespace Microsoft.PowerShell.EditorServices.Test.Language
         private ScriptFile GetScriptFile(ScriptRegion scriptRegion)
         {
             const string baseSharedScriptPath = 
-                @"..\..\..\PowerShellEditorServices.Test.Shared\";
+                @"..\..\..\Microsoft.PowerShell.EditorServices.Test.Shared\";
 
             string resolvedPath =
                 Path.Combine(

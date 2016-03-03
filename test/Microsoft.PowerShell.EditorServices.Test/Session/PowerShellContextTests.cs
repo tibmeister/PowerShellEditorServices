@@ -19,7 +19,7 @@ namespace Microsoft.PowerShell.EditorServices.Test.Console
         private AsyncQueue<SessionStateChangedEventArgs> stateChangeQueue;
 
         private const string DebugTestFilePath =
-            @"..\..\..\PowerShellEditorServices.Test.Shared\Debugging\DebugTest.ps1";
+            @"..\..\..\Microsoft.PowerShell.EditorServices.Test.Shared\Debugging\DebugTest.ps1";
 
         public PowerShellContextTests()
         {

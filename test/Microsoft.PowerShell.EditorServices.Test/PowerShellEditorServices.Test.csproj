@@ -85,11 +85,11 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\PowerShellEditorServices\PowerShellEditorServices.csproj">
+    <ProjectReference Include="..\..\src\Microsoft.PowerShell.EditorServices\PowerShellEditorServices.csproj">
       <Project>{81e8cbcd-6319-49e7-9662-0475bd0791f4}</Project>
       <Name>PowerShellEditorServices</Name>
     </ProjectReference>
-    <ProjectReference Include="..\PowerShellEditorServices.Test.Shared\PowerShellEditorServices.Test.Shared.csproj">
+    <ProjectReference Include="..\Microsoft.PowerShell.EditorServices.Test.Shared\PowerShellEditorServices.Test.Shared.csproj">
       <Project>{6a20b9e9-de66-456e-b4f5-acfd1a95c3ca}</Project>
       <Name>PowerShellEditorServices.Test.Shared</Name>
     </ProjectReference>

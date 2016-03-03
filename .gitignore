@@ -12,40 +12,17 @@ TestResults
 [Tt]humbs.db
 buildd.*
 release/
-*.log
-*.bak
 packages
-OACRTemp/
-build_logs/
 lock
-/public/inc/bldver.*
-/public/inc/sources.ver
-/data
-/target
-.corext/gen
-registered_data.ini
 .vs/
 
-# quickbuild.exe
-/VersionGeneratingLogs/
-QLogs
-QLocal
-QTestLogs
-
-# bad tlb/chm generators in nmake tree
-*.tlb
-*.chm
-
-# dumb silverlight
-ClientBin/
-
-# dump azure
-*.build.csdef
-csx/
+# project.json related files
+*.lock.json
+*.nuget.props
+*.nuget.targets
 
 # Don't include ScriptAnalyzer binaries
 PowerShellEditorServices/**
-
 
 PowerShellEditorServices.sln.ide/edb.chk
 PowerShellEditorServices.sln.ide/edbres00001.jrs

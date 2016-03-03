@@ -61,11 +61,11 @@
     <Compile Include="WebsocketServerChannel.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\PowerShellEditorServices.Protocol\PowerShellEditorServices.Protocol.csproj">
+    <ProjectReference Include="..\Microsoft.PowerShell.EditorServices.Protocol\PowerShellEditorServices.Protocol.csproj">
       <Project>{f8a0946a-5d25-4651-8079-b8d5776916fb}</Project>
       <Name>PowerShellEditorServices.Protocol</Name>
     </ProjectReference>
-    <ProjectReference Include="..\PowerShellEditorServices\PowerShellEditorServices.csproj">
+    <ProjectReference Include="..\Microsoft.PowerShell.EditorServices\PowerShellEditorServices.csproj">
       <Project>{81e8cbcd-6319-49e7-9662-0475bd0791f4}</Project>
       <Name>PowerShellEditorServices</Name>
     </ProjectReference>

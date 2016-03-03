@@ -4,18 +4,18 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0E720BF8-84E3-4C56-BCEA-7D6FD34D8948}</ProjectGuid>
+    <ProjectGuid>{B2F6369A-D737-4AFD-8B81-9B094DB07DA7}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Microsoft.PowerShell.EditorServices.Host</RootNamespace>
-    <AssemblyName>Microsoft.PowerShell.EditorServices.Host.x86</AssemblyName>
+    <AssemblyName>Microsoft.PowerShell.EditorServices.Host</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -25,15 +25,17 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>
     </DocumentationFile>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed" />
@@ -47,15 +49,11 @@
     <Reference Include="System.Management.Automation" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\PowerShellEditorServices.Host\Program.cs">
-      <Link>Program.cs</Link>
-    </Compile>
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\PowerShellEditorServices.Host\App.config">
-      <Link>App.config</Link>
-    </None>
+    <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\submodules\PSScriptAnalyzer\Engine\ScriptAnalyzerEngine.csproj">
@@ -66,11 +64,11 @@
       <Project>{c33b6b9d-e61c-45a3-9103-895fd82a5c1e}</Project>
       <Name>ScriptAnalyzerBuiltinRules</Name>
     </ProjectReference>
-    <ProjectReference Include="..\PowerShellEditorServices.Protocol\PowerShellEditorServices.Protocol.csproj">
+    <ProjectReference Include="..\Microsoft.PowerShell.EditorServices.Protocol\PowerShellEditorServices.Protocol.csproj">
       <Project>{f8a0946a-5d25-4651-8079-b8d5776916fb}</Project>
       <Name>PowerShellEditorServices.Protocol</Name>
     </ProjectReference>
-    <ProjectReference Include="..\PowerShellEditorServices\PowerShellEditorServices.csproj">
+    <ProjectReference Include="..\Microsoft.PowerShell.EditorServices\PowerShellEditorServices.csproj">
       <Project>{81e8cbcd-6319-49e7-9662-0475bd0791f4}</Project>
       <Name>PowerShellEditorServices</Name>
     </ProjectReference>
