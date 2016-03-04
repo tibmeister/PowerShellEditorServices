@@ -4,7 +4,6 @@
 //
 
 using Microsoft.PowerShell.EditorServices.Utility;
-using Microsoft.Windows.PowerShell.ScriptAnalyzer.Generic;
 using System;
 using System.Management.Automation.Language;
 
@@ -70,39 +69,6 @@ namespace Microsoft.PowerShell.EditorServices
                 Level = ScriptFileMarkerLevel.Error,
                 ScriptRegion = ScriptRegion.Create(parseError.Extent)
             };
-        }
-
-        internal static ScriptFileMarker FromDiagnosticRecord(
-            DiagnosticRecord diagnosticRecord)
-        {
-            Validate.IsNotNull("diagnosticRecord", diagnosticRecord);
-
-            return new ScriptFileMarker
-            {
-                Message = diagnosticRecord.Message,
-                Level = GetMarkerLevelFromDiagnosticSeverity(diagnosticRecord.Severity),
-                ScriptRegion = ScriptRegion.Create(diagnosticRecord.Extent)
-            };
-        }
-
-        private static ScriptFileMarkerLevel GetMarkerLevelFromDiagnosticSeverity(
-            DiagnosticSeverity diagnosticSeverity)
-        {
-            switch (diagnosticSeverity)
-            {
-                case DiagnosticSeverity.Information:
-                    return ScriptFileMarkerLevel.Information;
-                case DiagnosticSeverity.Warning:
-                    return ScriptFileMarkerLevel.Warning;
-                case DiagnosticSeverity.Error:
-                    return ScriptFileMarkerLevel.Error;
-                default:
-                    throw new ArgumentException(
-                        string.Format(
-                            "The provided DiagnosticSeverity value '{0}' is unknown.",
-                            diagnosticSeverity),
-                        "diagnosticSeverity");
-            }
         }
 
         #endregion

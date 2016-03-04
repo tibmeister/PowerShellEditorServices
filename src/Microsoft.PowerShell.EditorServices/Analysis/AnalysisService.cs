@@ -4,7 +4,6 @@
 //
 
 using Microsoft.PowerShell.EditorServices.Utility;
-using Microsoft.Windows.PowerShell.ScriptAnalyzer;
 using System;
 using System.IO;
 using System.Linq;
@@ -21,9 +20,6 @@ namespace Microsoft.PowerShell.EditorServices
     public class AnalysisService : IDisposable
     {
         #region Private Fields
-
-        private Runspace analysisRunspace;
-        private ScriptAnalyzer scriptAnalyzer;
 
         /// <summary>
         /// Defines the list of Script Analyzer rules to include by default.
@@ -49,30 +45,6 @@ namespace Microsoft.PowerShell.EditorServices
         /// </summary>
         public AnalysisService()
         {
-            try
-            {
-                // Attempt to create a ScriptAnalyzer instance first
-                // just in case the assembly can't be found and we
-                // can skip creating an extra runspace.
-                this.scriptAnalyzer = new ScriptAnalyzer();
-
-                this.analysisRunspace = RunspaceFactory.CreateRunspace(InitialSessionState.CreateDefault2());
-                this.analysisRunspace.ApartmentState = ApartmentState.STA;
-                this.analysisRunspace.ThreadOptions = PSThreadOptions.ReuseThread;
-                this.analysisRunspace.Open();
-
-                this.scriptAnalyzer.Initialize(
-                    this.analysisRunspace,
-                    new AnalysisOutputWriter(),
-                    includeRuleNames: IncludedRules,
-                    includeDefaultRules: true);
-            }
-            catch (FileNotFoundException)
-            {
-                Logger.Write(
-                    LogLevel.Warning,
-                    "Script Analyzer binaries not found, AnalysisService will be disabled.");
-            }
         }
 
         #endregion
@@ -87,34 +59,9 @@ namespace Microsoft.PowerShell.EditorServices
         /// <returns>An array of ScriptFileMarkers containing semantic analysis results.</returns>
         public ScriptFileMarker[] GetSemanticMarkers(ScriptFile file)
         {
-            if (this.scriptAnalyzer != null && file.IsAnalysisEnabled)
-            {
-                // TODO: This is a temporary fix until we can change how
-                // ScriptAnalyzer invokes their async tasks.
-                Task<ScriptFileMarker[]> analysisTask =
-                    Task.Factory.StartNew<ScriptFileMarker[]>(
-                        () =>
-                        {
-                            return 
-                                this.scriptAnalyzer
-                                    .AnalyzeSyntaxTree(
-                                        file.ScriptAst,
-                                        file.ScriptTokens,
-                                        file.FilePath)
-                                    .Select(ScriptFileMarker.FromDiagnosticRecord)
-                                    .ToArray();
-                        },
-                        CancellationToken.None,
-                        TaskCreationOptions.None,
-                        TaskScheduler.Default);
-
-                return analysisTask.Result;
-            }
-            else
-            {
-                // Return an empty marker list
-                return new ScriptFileMarker[0];
-            }
+            // Return an empty marker list
+            // TODO: Re-enable ScriptAnalyzer using other means
+            return new ScriptFileMarker[0];
         }
 
         /// <summary>
@@ -122,12 +69,6 @@ namespace Microsoft.PowerShell.EditorServices
         /// </summary>
         public void Dispose()
         {
-            if (this.analysisRunspace != null)
-            {
-                this.analysisRunspace.Close();
-                this.analysisRunspace.Dispose();
-                this.analysisRunspace = null;
-            }
         }
 
         #endregion

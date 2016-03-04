@@ -48,7 +48,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Analysis\AnalysisOutputWriter.cs" />
     <Compile Include="Analysis\AnalysisService.cs" />
     <Compile Include="Console\ChoicePromptHandler.cs" />
     <Compile Include="Console\ConsoleChoicePromptHandler.cs" />
@@ -117,12 +116,6 @@
     <Compile Include="Workspace\ScriptFileMarker.cs" />
     <Compile Include="Workspace\ScriptRegion.cs" />
     <Compile Include="Workspace\Workspace.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\submodules\PSScriptAnalyzer\Engine\ScriptAnalyzerEngine.csproj">
-      <Project>{f4bde3d0-3eef-4157-8a3e-722df7adef60}</Project>
-      <Name>ScriptAnalyzerEngine</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

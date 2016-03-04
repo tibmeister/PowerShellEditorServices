@@ -56,14 +56,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\submodules\PSScriptAnalyzer\Engine\ScriptAnalyzerEngine.csproj">
-      <Project>{f4bde3d0-3eef-4157-8a3e-722df7adef60}</Project>
-      <Name>ScriptAnalyzerEngine</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\submodules\PSScriptAnalyzer\Rules\ScriptAnalyzerBuiltinRules.csproj">
-      <Project>{c33b6b9d-e61c-45a3-9103-895fd82a5c1e}</Project>
-      <Name>ScriptAnalyzerBuiltinRules</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Microsoft.PowerShell.EditorServices.Protocol\PowerShellEditorServices.Protocol.csproj">
       <Project>{f8a0946a-5d25-4651-8079-b8d5776916fb}</Project>
       <Name>PowerShellEditorServices.Protocol</Name>
