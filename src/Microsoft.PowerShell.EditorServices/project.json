@@ -1,0 +1,28 @@
+﻿{
+  "name": "Microsoft.PowerShell.EditorServices",
+  "title": "PowerShell Editor Services",
+  "description": "Provides common PowerShell editor capabilities as a .NET library.",
+  "version": "0.5.0-beta",
+  "authors": [ "Microsoft" ],
+  "owners": [ "Microsoft" ],
+  "copyright": "© Microsoft Corporation. All rights reserved.",
+  "licenseUrl": "https://raw.githubusercontent.com/PowerShell/PowerShellEditorServices/master/LICENSE",
+  "requiresLicenseAcceptance": true,
+  "projectUrl": "https://github.com/PowerShell/PowerShellEditorServices",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/PowerShell/PowerShellEditorServices.git"
+  },
+  "tags": "PowerShell editor development language debugging",
+
+  "frameworks": {
+    "net451": {
+      "dependencies": {
+        "Microsoft.PowerShell.5.ReferenceAssemblies": {
+          "type": "build",
+          "version": "1.0.0"
+        }
+      }
+    }
+  }
+}
