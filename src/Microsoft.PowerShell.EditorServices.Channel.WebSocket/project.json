@@ -1,7 +1,7 @@
 ﻿{
-  "name": "Microsoft.PowerShell.EditorServices",
-  "title": "PowerShell Editor Services",
-  "description": "Provides common PowerShell editor capabilities as a .NET library.",
+  "name": "Microsoft.PowerShell.EditorServices.Channel.WebSocket",
+  "title": "PowerShell Editor Services Host Protocol WebSocket Channel",
+  "description": "Provides a WebSocket channel for communicating with the host process.",
   "version": "0.5.0-beta",
   "authors": [ "Microsoft" ],
   "owners": [ "Microsoft" ],
@@ -18,9 +18,14 @@
   "frameworks": {
     "net451": {
       "dependencies": {
-        "Microsoft.PowerShell.5.ReferenceAssemblies": {
-          "type": "build",
-          "version": "1.0.0"
+        "Owin.WebSocket": "1.5.0",
+        "Microsoft.PowerShell.EditorServices": {
+          "target": "project",
+          "version": ""
+        },
+        "Microsoft.PowerShell.EditorServices.Protocol": {
+          "target": "project",
+          "version": ""
         }
       }
     }

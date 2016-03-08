@@ -1,7 +1,7 @@
 ﻿{
-  "name": "Microsoft.PowerShell.EditorServices",
-  "title": "PowerShell Editor Services",
-  "description": "Provides common PowerShell editor capabilities as a .NET library.",
+  "name": "Microsoft.PowerShell.EditorServices.Protocol",
+  "title": "PowerShell Editor Services Host Protocol Library",
+  "description": "Provides message types and client/server APIs for the PowerShell Editor Services JSON protocol.",
   "version": "0.5.0-beta",
   "authors": [ "Microsoft" ],
   "owners": [ "Microsoft" ],
@@ -18,10 +18,11 @@
   "frameworks": {
     "net451": {
       "dependencies": {
-        "Microsoft.PowerShell.5.ReferenceAssemblies": {
-          "type": "build",
-          "version": "1.0.0"
-        }
+        "Microsoft.PowerShell.EditorServices": {
+          "target": "project",
+          "version": ""
+        },
+        "Newtonsoft.Json": "7.0.1"
       }
     }
   }

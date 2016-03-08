@@ -1,7 +1,5 @@
 ﻿{
-  "name": "Microsoft.PowerShell.EditorServices",
-  "title": "PowerShell Editor Services",
-  "description": "Provides common PowerShell editor capabilities as a .NET library.",
+  "name": "Microsoft.PowerShell.EditorServices.Test.Shared",
   "version": "0.5.0-beta",
   "authors": [ "Microsoft" ],
   "owners": [ "Microsoft" ],
@@ -18,9 +16,9 @@
   "frameworks": {
     "net451": {
       "dependencies": {
-        "Microsoft.PowerShell.5.ReferenceAssemblies": {
-          "type": "build",
-          "version": "1.0.0"
+        "Microsoft.PowerShell.EditorServices": {
+          "target": "project",
+          "version": ""
         }
       }
     }

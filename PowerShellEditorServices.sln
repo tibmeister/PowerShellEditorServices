@@ -14,6 +14,24 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{E231
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Microsoft.PowerShell.EditorServices", "src\Microsoft.PowerShell.EditorServices\Microsoft.PowerShell.EditorServices.xproj", "{7E5290A2-E2B5-4FB2-B3BA-F5C148B28F5B}"
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Microsoft.PowerShell.EditorServices.Protocol", "src\Microsoft.PowerShell.EditorServices.Protocol\Microsoft.PowerShell.EditorServices.Protocol.xproj", "{35C84F5F-3E26-4AE8-A442-612BE0340641}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Microsoft.PowerShell.EditorServices.Host", "src\Microsoft.PowerShell.EditorServices.Host\Microsoft.PowerShell.EditorServices.Host.xproj", "{268648AB-5B57-4D2B-837A-440512D3DE82}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Microsoft.PowerShell.EditorServices.Host.x86", "src\Microsoft.PowerShell.EditorServices.Host.x86\Microsoft.PowerShell.EditorServices.Host.x86.xproj", "{96213AEB-46FB-45B5-9B6C-C817AFE081A8}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Microsoft.PowerShell.EditorServices.Channel.WebSocket", "src\Microsoft.PowerShell.EditorServices.Channel.WebSocket\Microsoft.PowerShell.EditorServices.Channel.WebSocket.xproj", "{11B4D589-DE39-4E60-A6C1-19026EDE4EB6}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Microsoft.PowerShell.EditorServices.Test.Shared", "test\Microsoft.PowerShell.EditorServices.Test.Shared\Microsoft.PowerShell.EditorServices.Test.Shared.xproj", "{A91B3E77-B984-4E93-98FA-7B465AEF6B02}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Microsoft.PowerShell.EditorServices.Test", "test\Microsoft.PowerShell.EditorServices.Test\Microsoft.PowerShell.EditorServices.Test.xproj", "{C4830B5D-2067-4437-95D3-355CB2650F60}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Microsoft.PowerShell.EditorServices.Test.Channel.WebSocket", "test\Microsoft.PowerShell.EditorServices.Test.Channel.WebSocket\Microsoft.PowerShell.EditorServices.Test.Channel.WebSocket.xproj", "{D6350B7F-8353-4A9D-9782-DF03551659E2}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Microsoft.PowerShell.EditorServices.Test.Host", "test\Microsoft.PowerShell.EditorServices.Test.Host\Microsoft.PowerShell.EditorServices.Test.Host.xproj", "{4145D561-D93E-4123-9099-95FF9EADC44A}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Microsoft.PowerShell.EditorServices.Test.Protocol", "test\Microsoft.PowerShell.EditorServices.Test.Protocol\Microsoft.PowerShell.EditorServices.Test.Protocol.xproj", "{CC93EA81-A65C-47F1-9F4D-9EE533E82ADB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,11 +42,56 @@ Global
 		{7E5290A2-E2B5-4FB2-B3BA-F5C148B28F5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7E5290A2-E2B5-4FB2-B3BA-F5C148B28F5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7E5290A2-E2B5-4FB2-B3BA-F5C148B28F5B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35C84F5F-3E26-4AE8-A442-612BE0340641}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35C84F5F-3E26-4AE8-A442-612BE0340641}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35C84F5F-3E26-4AE8-A442-612BE0340641}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35C84F5F-3E26-4AE8-A442-612BE0340641}.Release|Any CPU.Build.0 = Release|Any CPU
+		{268648AB-5B57-4D2B-837A-440512D3DE82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{268648AB-5B57-4D2B-837A-440512D3DE82}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{268648AB-5B57-4D2B-837A-440512D3DE82}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{268648AB-5B57-4D2B-837A-440512D3DE82}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96213AEB-46FB-45B5-9B6C-C817AFE081A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96213AEB-46FB-45B5-9B6C-C817AFE081A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96213AEB-46FB-45B5-9B6C-C817AFE081A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96213AEB-46FB-45B5-9B6C-C817AFE081A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11B4D589-DE39-4E60-A6C1-19026EDE4EB6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11B4D589-DE39-4E60-A6C1-19026EDE4EB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11B4D589-DE39-4E60-A6C1-19026EDE4EB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11B4D589-DE39-4E60-A6C1-19026EDE4EB6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A91B3E77-B984-4E93-98FA-7B465AEF6B02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A91B3E77-B984-4E93-98FA-7B465AEF6B02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A91B3E77-B984-4E93-98FA-7B465AEF6B02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A91B3E77-B984-4E93-98FA-7B465AEF6B02}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4830B5D-2067-4437-95D3-355CB2650F60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4830B5D-2067-4437-95D3-355CB2650F60}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4830B5D-2067-4437-95D3-355CB2650F60}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4830B5D-2067-4437-95D3-355CB2650F60}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6350B7F-8353-4A9D-9782-DF03551659E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6350B7F-8353-4A9D-9782-DF03551659E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6350B7F-8353-4A9D-9782-DF03551659E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6350B7F-8353-4A9D-9782-DF03551659E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4145D561-D93E-4123-9099-95FF9EADC44A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4145D561-D93E-4123-9099-95FF9EADC44A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4145D561-D93E-4123-9099-95FF9EADC44A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4145D561-D93E-4123-9099-95FF9EADC44A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC93EA81-A65C-47F1-9F4D-9EE533E82ADB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC93EA81-A65C-47F1-9F4D-9EE533E82ADB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC93EA81-A65C-47F1-9F4D-9EE533E82ADB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC93EA81-A65C-47F1-9F4D-9EE533E82ADB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{7E5290A2-E2B5-4FB2-B3BA-F5C148B28F5B} = {F594E7FD-1E72-4E51-A496-B019C2BA3180}
+		{35C84F5F-3E26-4AE8-A442-612BE0340641} = {F594E7FD-1E72-4E51-A496-B019C2BA3180}
+		{268648AB-5B57-4D2B-837A-440512D3DE82} = {F594E7FD-1E72-4E51-A496-B019C2BA3180}
+		{96213AEB-46FB-45B5-9B6C-C817AFE081A8} = {F594E7FD-1E72-4E51-A496-B019C2BA3180}
+		{11B4D589-DE39-4E60-A6C1-19026EDE4EB6} = {F594E7FD-1E72-4E51-A496-B019C2BA3180}
+		{A91B3E77-B984-4E93-98FA-7B465AEF6B02} = {422E561A-8118-4BE7-A54F-9309E4F03AAE}
+		{C4830B5D-2067-4437-95D3-355CB2650F60} = {422E561A-8118-4BE7-A54F-9309E4F03AAE}
+		{D6350B7F-8353-4A9D-9782-DF03551659E2} = {422E561A-8118-4BE7-A54F-9309E4F03AAE}
+		{4145D561-D93E-4123-9099-95FF9EADC44A} = {422E561A-8118-4BE7-A54F-9309E4F03AAE}
+		{CC93EA81-A65C-47F1-9F4D-9EE533E82ADB} = {422E561A-8118-4BE7-A54F-9309E4F03AAE}
 	EndGlobalSection
 EndGlobal

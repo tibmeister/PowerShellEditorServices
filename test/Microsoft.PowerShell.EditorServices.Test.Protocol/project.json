@@ -1,7 +1,5 @@
 ﻿{
-  "name": "Microsoft.PowerShell.EditorServices",
-  "title": "PowerShell Editor Services",
-  "description": "Provides common PowerShell editor capabilities as a .NET library.",
+  "name": "Microsoft.PowerShell.EditorServices.Test.Protocol",
   "version": "0.5.0-beta",
   "authors": [ "Microsoft" ],
   "owners": [ "Microsoft" ],
@@ -15,12 +13,24 @@
   },
   "tags": [ "PowerShell", "editor", "development", "language", "debugging" ],
 
+  "dependencies": {
+    "xunit": "2.1.0-*",
+    "xunit.runner.console": "2.1.0-*"
+  },
+
   "frameworks": {
     "net451": {
+      "frameworkAssemblies": {
+        "System.Runtime": "4.0.10.0",
+        "System.Xml": "4.0.0.0",
+        "System.Linq": "4.0.0.0",
+        "System.Xml.Linq": "4.0.0.0",
+        "System.Threading.Tasks": "4.0.0.0"
+      },
       "dependencies": {
-        "Microsoft.PowerShell.5.ReferenceAssemblies": {
-          "type": "build",
-          "version": "1.0.0"
+        "Microsoft.PowerShell.EditorServices.Protocol": {
+          "target": "project",
+          "version": ""
         }
       }
     }

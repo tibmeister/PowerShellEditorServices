@@ -1,7 +1,7 @@
 ﻿{
-  "name": "Microsoft.PowerShell.EditorServices",
-  "title": "PowerShell Editor Services",
-  "description": "Provides common PowerShell editor capabilities as a .NET library.",
+  "name": "Microsoft.PowerShell.EditorServices.Host.x86",
+  "title": "PowerShell Editor Services Host Process",
+  "description": "Provides a process for hosting the PowerShell Editor Services library exposed by a JSON message protocol.",
   "version": "0.5.0-beta",
   "authors": [ "Microsoft" ],
   "owners": [ "Microsoft" ],
@@ -14,13 +14,24 @@
     "url": "https://github.com/PowerShell/PowerShellEditorServices.git"
   },
   "tags": [ "PowerShell", "editor", "development", "language", "debugging" ],
+  "compilationOptions": {
+    "emitEntryPoint": true
+  },
+
+  "compile": [
+    "../Microsoft.PowerShell.EditorServices.Host/Program.cs"
+  ],
 
   "frameworks": {
     "net451": {
       "dependencies": {
-        "Microsoft.PowerShell.5.ReferenceAssemblies": {
-          "type": "build",
-          "version": "1.0.0"
+        "Microsoft.PowerShell.EditorServices": {
+          "target": "project",
+          "version": ""
+        },
+        "Microsoft.PowerShell.EditorServices.Protocol": {
+          "target": "project",
+          "version": ""
         }
       }
     }
