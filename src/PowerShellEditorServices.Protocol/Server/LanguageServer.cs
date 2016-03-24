@@ -6,8 +6,8 @@
 using Microsoft.PowerShell.EditorServices.Protocol.LanguageServer;
 using Microsoft.PowerShell.EditorServices.Protocol.MessageProtocol;
 using Microsoft.PowerShell.EditorServices.Protocol.MessageProtocol.Channel;
-using Microsoft.PowerShell.EditorServices.Protocol.Messages;
 using Microsoft.PowerShell.EditorServices.Utility;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -27,6 +27,9 @@ namespace Microsoft.PowerShell.EditorServices.Protocol.Server
         private EditorSession editorSession;
         private OutputDebouncer outputDebouncer;
         private LanguageServerSettings currentSettings = new LanguageServerSettings();
+
+        private Dictionary<string, Dictionary<string, MarkerCorrection>> codeActionsPerFile =
+            new Dictionary<string, Dictionary<string, MarkerCorrection>>();
 
         public LanguageServer() : this(new StdioServerChannel())
         {
@@ -70,6 +73,7 @@ namespace Microsoft.PowerShell.EditorServices.Protocol.Server
             this.SetRequestHandler(HoverRequest.Type, this.HandleHoverRequest);
             this.SetRequestHandler(DocumentSymbolRequest.Type, this.HandleDocumentSymbolRequest);
             this.SetRequestHandler(WorkspaceSymbolRequest.Type, this.HandleWorkspaceSymbolRequest);
+            this.SetRequestHandler(CodeActionRequest.Type, this.HandleCodeActionRequest);
 
             this.SetRequestHandler(ShowOnlineHelpRequest.Type, this.HandleShowOnlineHelpRequest);
             this.SetRequestHandler(ExpandAliasRequest.Type, this.HandleExpandAliasRequest);
@@ -115,6 +119,7 @@ namespace Microsoft.PowerShell.EditorServices.Protocol.Server
                         DocumentSymbolProvider = true,
                         WorkspaceSymbolProvider = true,
                         HoverProvider = true,
+                        CodeActionProvider = true,
                         CompletionProvider = new CompletionOptions
                         {
                             ResolveProvider = true,
@@ -309,6 +314,7 @@ function __Expand-Alias {
                         await PublishScriptDiagnostics(
                             scriptFile,
                             emptyAnalysisDiagnostics,
+                            this.codeActionsPerFile,
                             eventContext);
                     }
                 }
@@ -725,6 +731,35 @@ function __Expand-Alias {
             return symbolName.IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0;
         }
 
+        protected async Task HandleCodeActionRequest(
+            CodeActionRequest codeActionParams,
+            RequestContext<CodeActionCommand[]> requestContext)
+        {
+            MarkerCorrection correction = null;
+            Dictionary<string, MarkerCorrection> markerIndex = null;
+            List<CodeActionCommand> codeActionCommands = new List<CodeActionCommand>();
+
+            if (this.codeActionsPerFile.TryGetValue(codeActionParams.TextDocument.Uri, out markerIndex))
+            {
+                foreach (var diagnostic in codeActionParams.Context.Diagnostics)
+                {
+                    if (markerIndex.TryGetValue(diagnostic.Code, out correction))
+                    {
+                        codeActionCommands.Add(
+                            new CodeActionCommand
+                            {
+                                Title = correction.Name,
+                                Command = "PowerShell.ApplyCodeActionEdits",
+                                Arguments = JArray.FromObject(correction.Edits)
+                            });
+                    }
+                }
+            }
+
+            await requestContext.SendResult(
+                codeActionCommands.ToArray());
+        }
+
         protected Task HandleEvaluateRequest(
             DebugAdapterMessages.EvaluateRequestArguments evaluateParams,
             RequestContext<DebugAdapterMessages.EvaluateResponseBody> requestContext)
@@ -852,6 +887,7 @@ function __Expand-Alias {
                     DelayThenInvokeDiagnostics(
                         750,
                         filesToAnalyze,
+                        this.codeActionsPerFile,
                         editorSession,
                         eventContext,
                         existingRequestCancellation.Token),
@@ -865,6 +901,7 @@ function __Expand-Alias {
         private static async Task DelayThenInvokeDiagnostics(
             int delayMilliseconds,
             ScriptFile[] filesToAnalyze,
+            Dictionary<string, Dictionary<string, MarkerCorrection>> correctionIndex,
             EditorSession editorSession,
             EventContext eventContext,
             CancellationToken cancellationToken)
@@ -914,6 +951,7 @@ function __Expand-Alias {
                 await PublishScriptDiagnostics(
                     scriptFile,
                     semanticMarkers,
+                    correctionIndex,
                     eventContext);
             }
         }
@@ -921,9 +959,28 @@ function __Expand-Alias {
         private static async Task PublishScriptDiagnostics(
             ScriptFile scriptFile,
             ScriptFileMarker[] semanticMarkers,
+            Dictionary<string, Dictionary<string, MarkerCorrection>> correctionIndex,
             EventContext eventContext)
         {
-            var allMarkers = scriptFile.SyntaxMarkers.Concat(semanticMarkers);
+            List<Diagnostic> diagnostics = new List<Diagnostic>();
+
+            // Hold on to any corrections that may need to be applied later
+            Dictionary<string, MarkerCorrection> fileCorrections =
+                new Dictionary<string, MarkerCorrection>();
+
+            foreach (var marker in scriptFile.SyntaxMarkers.Concat(semanticMarkers))
+            {
+                // Does the marker contain a correction?
+                Diagnostic markerDiagnostic = GetDiagnosticFromMarker(marker);
+                if (marker.Correction != null)
+                {
+                    fileCorrections.Add(markerDiagnostic.Code, marker.Correction);
+                }
+
+                diagnostics.Add(markerDiagnostic);
+            }
+
+            correctionIndex[scriptFile.ClientFilePath] = fileCorrections;
 
             // Always send syntax and semantic errors.  We want to 
             // make sure no out-of-date markers are being displayed.
@@ -932,10 +989,7 @@ function __Expand-Alias {
                 new PublishDiagnosticsNotification
                 {
                     Uri = scriptFile.ClientFilePath,
-                    Diagnostics =
-                       allMarkers
-                            .Select(GetDiagnosticFromMarker)
-                            .ToArray()
+                    Diagnostics = diagnostics.ToArray()
                 });
         }
 
@@ -945,6 +999,7 @@ function __Expand-Alias {
             {
                 Severity = MapDiagnosticSeverity(scriptFileMarker.Level),
                 Message = scriptFileMarker.Message,
+                Code = Guid.NewGuid().ToString(),
                 Range = new Range
                 {
                     // TODO: What offsets should I use?

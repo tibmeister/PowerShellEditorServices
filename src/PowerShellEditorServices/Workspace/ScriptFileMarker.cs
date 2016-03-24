@@ -6,10 +6,19 @@
 using Microsoft.PowerShell.EditorServices.Utility;
 using Microsoft.Windows.PowerShell.ScriptAnalyzer.Generic;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Management.Automation.Language;
 
 namespace Microsoft.PowerShell.EditorServices
 {
+    public class MarkerCorrection
+    {
+        public string Name { get; set; }
+
+        public ScriptRegion[] Edits { get; set; }
+    }
+
     /// <summary>
     /// Defines the message level of a script file marker.
     /// </summary>
@@ -55,6 +64,8 @@ namespace Microsoft.PowerShell.EditorServices
         /// </summary>
         public ScriptRegion ScriptRegion { get; set; }
 
+        public MarkerCorrection Correction { get; set; }
+
         #endregion
 
         #region Public Methods
@@ -77,11 +88,40 @@ namespace Microsoft.PowerShell.EditorServices
         {
             Validate.IsNotNull("diagnosticRecord", diagnosticRecord);
 
+            MarkerCorrection correction = null;
+
+            if (diagnosticRecord.SuggestedCorrections != null)
+            {
+                IEnumerable<ScriptRegion> editRegions =
+                    diagnosticRecord
+                        .SuggestedCorrections
+                        .Select(
+                            c => new ScriptRegion
+                            {
+                                File = diagnosticRecord.Extent.File,
+                                Text = c.Text,
+                                StartLineNumber = c.StartLineNumber,
+                                StartColumnNumber = c.StartColumnNumber,
+                                EndLineNumber = c.EndLineNumber,
+                                EndColumnNumber = c.EndColumnNumber
+                            });
+
+                correction = new MarkerCorrection
+                {
+                    Name =
+                        diagnosticRecord.SuggestedCorrections.Select(e => e.Description).FirstOrDefault()
+                        ?? diagnosticRecord.Message,
+
+                    Edits = editRegions.ToArray()
+                };
+            }
+
             return new ScriptFileMarker
             {
                 Message = diagnosticRecord.Message,
                 Level = GetMarkerLevelFromDiagnosticSeverity(diagnosticRecord.Severity),
-                ScriptRegion = ScriptRegion.Create(diagnosticRecord.Extent)
+                ScriptRegion = ScriptRegion.Create(diagnosticRecord.Extent),
+                Correction = correction
             };
         }
 
