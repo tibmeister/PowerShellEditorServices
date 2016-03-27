@@ -71,6 +71,8 @@ namespace Microsoft.PowerShell.EditorServices
             }
         }
 
+        public BufferRange FileRange { get; private set; }
+
         /// <summary>
         /// Gets the list of syntax markers found by parsing this
         /// file's contents.
@@ -368,6 +370,22 @@ namespace Microsoft.PowerShell.EditorServices
         private void ParseFileContents()
         {
             ParseError[] parseErrors = null;
+
+            // First, get the updated file range
+            int lineCount = this.FileLines.Count;
+            if (lineCount > 0)
+            {
+                this.FileRange =
+                    new BufferRange(
+                        new BufferPosition(0, 0),
+                        new BufferPosition(
+                            lineCount,
+                            this.FileLines[lineCount - 1].Length));
+            }
+            else
+            {
+                this.FileRange = BufferRange.None;
+            }
 
             try
             {

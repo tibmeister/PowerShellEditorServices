@@ -4,6 +4,7 @@
 //
 
 using Microsoft.PowerShell.EditorServices.Console;
+using Microsoft.PowerShell.EditorServices.Extensions;
 using Microsoft.PowerShell.EditorServices.Session;
 using Microsoft.PowerShell.EditorServices.Utility;
 using System.IO;
@@ -48,6 +49,11 @@ namespace Microsoft.PowerShell.EditorServices
         /// </summary>
         public ConsoleService ConsoleService { get; private set; }
 
+        /// <summary>
+        /// Gets the ExtensionService instance for this session.
+        /// </summary>
+        public IExtensionService ExtensionService { get; private set; }
+
         #endregion
 
         #region Public Methods
@@ -75,6 +81,11 @@ namespace Microsoft.PowerShell.EditorServices
             this.LanguageService = new LanguageService(this.PowerShellContext);
             this.DebugService = new DebugService(this.PowerShellContext);
             this.ConsoleService = new ConsoleService(this.PowerShellContext);
+
+            // TODO: Make method async?
+            var extensionService = new ExtensionService(this.PowerShellContext);
+            extensionService.Initialize().Wait();
+            this.ExtensionService = extensionService;
 
             // Only enable the AnalysisService if the machine has PowerShell
             // v5 installed.  Script Analyzer works on earlier PowerShell

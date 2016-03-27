@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 //
 
+using Microsoft.PowerShell.EditorServices.Extensions;
 using Microsoft.PowerShell.EditorServices.Protocol.LanguageServer;
 using Microsoft.PowerShell.EditorServices.Protocol.MessageProtocol;
 using Microsoft.PowerShell.EditorServices.Protocol.MessageProtocol.Channel;
@@ -20,6 +21,64 @@ using DebugAdapterMessages = Microsoft.PowerShell.EditorServices.Protocol.DebugA
 
 namespace Microsoft.PowerShell.EditorServices.Protocol.Server
 {
+    internal class LanguageServerEditorOperations : IEditorOperations
+    {
+        private IMessageSender messageSender;
+
+        public LanguageServerEditorOperations(IMessageSender messageSender)
+        {
+            this.messageSender = messageSender;
+        }
+
+        public Task InsertText(string filePath, string text, BufferRange insertRange)
+        {
+            return this.messageSender.SendRequest(
+                InsertTextRequest.Type,
+                new InsertTextRequest
+                {
+                    FilePath = filePath,
+                    InsertText = text,
+                    InsertRange =
+                        new Range
+                        {
+                            Start = new Position
+                            {
+                                Line = insertRange.Start.Line - 1,
+                                Character = insertRange.Start.Column - 1
+                            },
+                            End = new Position
+                            {
+                                Line = insertRange.End.Line - 1,
+                                Character = insertRange.End.Column - 1
+                            }
+                        }
+                }, true);
+        }
+
+        public Task SetSelection(BufferRange selectionRange)
+        {
+            return this.messageSender.SendRequest(
+                SetSelectionRequest.Type,
+                new SetSelectionRequest
+                {
+                    SelectionRange =
+                        new Range
+                        {
+                            Start = new Position
+                            {
+                                Line = selectionRange.Start.Line - 1,
+                                Character = selectionRange.Start.Column - 1
+                            },
+                            End = new Position
+                            {
+                                Line = selectionRange.End.Line - 1,
+                                Character = selectionRange.End.Column - 1
+                            }
+                        }
+                }, true);
+        }
+    }
+
     public class LanguageServer : LanguageServerBase
     {
         private static CancellationTokenSource existingRequestCancellation;
@@ -27,6 +86,7 @@ namespace Microsoft.PowerShell.EditorServices.Protocol.Server
         private bool profilesLoaded;
         private EditorSession editorSession;
         private OutputDebouncer outputDebouncer;
+        private IEditorOperations editorOperations;
         private LanguageServerSettings currentSettings = new LanguageServerSettings();
 
         /// <param name="hostDetails">
@@ -46,6 +106,14 @@ namespace Microsoft.PowerShell.EditorServices.Protocol.Server
             this.editorSession = new EditorSession();
             this.editorSession.StartSession(hostDetails);
             this.editorSession.ConsoleService.OutputWritten += this.powerShellContext_OutputWritten;
+
+            // Attach to ExtensionService events
+            this.editorSession.ExtensionService.ExtensionAdded += ExtensionService_ExtensionAdded;
+            this.editorSession.ExtensionService.ExtensionUpdated += ExtensionService_ExtensionUpdated;
+            this.editorSession.ExtensionService.ExtensionRemoved += ExtensionService_ExtensionRemoved;
+
+            // Create the IEditorOperations implementation
+            this.editorOperations = new LanguageServerEditorOperations(this);
 
             // Always send console prompts through the UI in the language service
             // TODO: This will change later once we have a general REPL available
@@ -85,6 +153,8 @@ namespace Microsoft.PowerShell.EditorServices.Protocol.Server
 
             this.SetRequestHandler(FindModuleRequest.Type, this.HandleFindModuleRequest);
             this.SetRequestHandler(InstallModuleRequest.Type, this.HandleInstallModuleRequest);
+
+            this.SetRequestHandler(InvokeExtensionCommandRequest.Type, this.HandleInvokeExtensionCommandRequest);
 
             this.SetRequestHandler(DebugAdapterMessages.EvaluateRequest.Type, this.HandleEvaluateRequest);
         }
@@ -169,6 +239,32 @@ namespace Microsoft.PowerShell.EditorServices.Protocol.Server
             await requestContext.SendResult(null);
         }
 
+        private async Task HandleInvokeExtensionCommandRequest(
+            InvokeExtensionCommandRequest commandDetails,
+            RequestContext<string> requestContext)
+        {
+            // TODO: This shouldn't block the request until complete
+            // TODO: Make some distinction between running in session and not?
+
+            EditorContext editorContext =
+                new EditorContext(
+                    this.editorOperations,
+                    this.editorSession.Workspace.GetFile(commandDetails.Context.CurrentFilePath),
+                    new BufferPosition(
+                        commandDetails.Context.CursorPosition.Line + 1,
+                        commandDetails.Context.CursorPosition.Character + 1),
+                    new BufferRange(
+                        commandDetails.Context.SelectionRange.Start.Line + 1,
+                        commandDetails.Context.SelectionRange.Start.Character + 1,
+                        commandDetails.Context.SelectionRange.End.Line + 1,
+                        commandDetails.Context.SelectionRange.End.Character + 1));
+
+            await this.editorSession.ExtensionService.InvokeCommand(
+                commandDetails.Name,
+                editorContext);
+
+            await requestContext.SendResult(null);
+        }
 
         private async Task HandleExpandAliasRequest(
             string content,
@@ -780,11 +876,43 @@ function __Expand-Alias {
 
         #region Event Handlers
 
-        async void powerShellContext_OutputWritten(object sender, OutputWrittenEventArgs e)
+        private async void powerShellContext_OutputWritten(object sender, OutputWrittenEventArgs e)
         {
             // Queue the output for writing
             await this.outputDebouncer.Invoke(e);
         }
+
+        private async void ExtensionService_ExtensionAdded(object sender, ExtensionCommand e)
+        {
+            await this.SendEvent(
+                ExtensionCommandAddedNotification.Type,
+                new ExtensionCommandAddedNotification
+                {
+                    Name = e.Name,
+                    DisplayName = e.DisplayName
+                });
+        }
+
+        private async void ExtensionService_ExtensionUpdated(object sender, ExtensionCommand e)
+        {
+            await this.SendEvent(
+                ExtensionCommandUpdatedNotification.Type,
+                new ExtensionCommandUpdatedNotification
+                {
+                    Name = e.Name,
+                });
+        }
+
+        private async void ExtensionService_ExtensionRemoved(object sender, ExtensionCommand e)
+        {
+            await this.SendEvent(
+                ExtensionCommandRemovedNotification.Type,
+                new ExtensionCommandRemovedNotification
+                {
+                    Name = e.Name,
+                });
+        }
+
 
         #endregion
 

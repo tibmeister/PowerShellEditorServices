@@ -3,13 +3,18 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 //
 
+using System.Diagnostics;
+
 namespace Microsoft.PowerShell.EditorServices
 {
     /// <summary>
     /// Provides details about a position in a file buffer.
     /// </summary>
+    [DebuggerDisplay("Position = {Line}:{Character}")]
     public struct BufferPosition
     {
+        public static readonly BufferPosition None = new BufferPosition(-1, -1);
+
         /// <summary>
         /// Gets the line number of the position in the buffer.
         /// </summary>
