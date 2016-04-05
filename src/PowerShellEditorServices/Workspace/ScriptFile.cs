@@ -377,10 +377,10 @@ namespace Microsoft.PowerShell.EditorServices
             {
                 this.FileRange =
                     new BufferRange(
-                        new BufferPosition(0, 0),
+                        new BufferPosition(1, 1),
                         new BufferPosition(
-                            lineCount,
-                            this.FileLines[lineCount - 1].Length));
+                            lineCount + 1,
+                            this.FileLines[lineCount - 1].Length + 1));
             }
             else
             {

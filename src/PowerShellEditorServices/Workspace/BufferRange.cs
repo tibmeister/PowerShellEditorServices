@@ -26,6 +26,13 @@ namespace Microsoft.PowerShell.EditorServices
         /// </summary>
         public BufferPosition End { get; private set; }
 
+        public bool HasRange
+        {
+            get
+            {
+                return this.Start
+            }
+        }
         /// <summary>
         /// Creates a new instance of the BufferRange class.
         /// </summary>

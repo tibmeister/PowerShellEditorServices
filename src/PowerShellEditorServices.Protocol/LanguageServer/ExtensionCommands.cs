@@ -52,11 +52,24 @@ namespace Microsoft.PowerShell.EditorServices.Protocol.LanguageServer
         public ClientEditorContext Context { get; set; }
     }
 
+    public class GetEditorContextRequest
+    {
+        public static readonly
+            RequestType<GetEditorContextRequest, ClientEditorContext> Type =
+            RequestType<GetEditorContextRequest, ClientEditorContext>.Create("editor/getEditorContext");
+    }
+
+    public enum EditorCommandResponse
+    {
+        Unsupported,
+        OK
+    }
+
     public class InsertTextRequest
     {
         public static readonly
-            RequestType<InsertTextRequest, string> Type =
-            RequestType<InsertTextRequest, string>.Create("editor/insertText");
+            RequestType<InsertTextRequest, EditorCommandResponse> Type =
+            RequestType<InsertTextRequest, EditorCommandResponse>.Create("editor/insertText");
 
         public string FilePath { get; set; }
 
@@ -68,8 +81,8 @@ namespace Microsoft.PowerShell.EditorServices.Protocol.LanguageServer
     public class SetSelectionRequest
     {
         public static readonly
-            RequestType<SetSelectionRequest, string> Type =
-            RequestType<SetSelectionRequest, string>.Create("editor/setSelection");
+            RequestType<SetSelectionRequest, EditorCommandResponse> Type =
+            RequestType<SetSelectionRequest, EditorCommandResponse>.Create("editor/setSelection");
 
         public Range SelectionRange { get; set; }
     }
@@ -77,8 +90,8 @@ namespace Microsoft.PowerShell.EditorServices.Protocol.LanguageServer
     public class SetCursorPositionRequest
     {
         public static readonly
-            RequestType<SetCursorPositionRequest, string> Type =
-            RequestType<SetCursorPositionRequest, string>.Create("editor/setCursorPosition");
+            RequestType<SetCursorPositionRequest, EditorCommandResponse> Type =
+            RequestType<SetCursorPositionRequest, EditorCommandResponse>.Create("editor/setCursorPosition");
 
         public Position CursorPosition { get; set; }
     }

@@ -8,7 +8,9 @@ using System.Diagnostics;
 namespace Microsoft.PowerShell.EditorServices
 {
     /// <summary>
-    /// Provides details about a position in a file buffer.
+    /// Provides details about a position in a file buffer.  All
+    /// positions are expressed in 1-based positions (i.e. the
+    /// first line and column in the file is position 1,1).
     /// </summary>
     [DebuggerDisplay("Position = {Line}:{Character}")]
     public struct BufferPosition

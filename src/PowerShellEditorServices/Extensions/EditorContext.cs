@@ -5,6 +5,7 @@ namespace Microsoft.PowerShell.EditorServices.Extensions
     public class FileContext
     {
         private ScriptFile scriptFile;
+        private EditorContext editorContext;
         private IEditorOperations editorOperations;
 
         public string Path
@@ -29,17 +30,29 @@ namespace Microsoft.PowerShell.EditorServices.Extensions
 
         public FileContext(
             ScriptFile scriptFile,
+            EditorContext editorContext,
             IEditorOperations editorOperations)
         {
             this.scriptFile = scriptFile;
+            this.editorContext = editorContext;
             this.editorOperations = editorOperations;
         }
 
         public void InsertText(string newText)
         {
-            this.InsertText(
-                newText,
-                BufferRange.None);
+            // Is there a selection?
+            if (this.editorContext.SelectedRange.HasRange)
+            {
+                this.InsertText(
+                    newText,
+                    this.editorContext.SelectedRange);
+            }
+            else
+            {
+                this.InsertText(
+                    newText,
+                    this.editorContext.CursorPosition);
+            }
         }
 
         public void InsertText(string newText, BufferPosition insertPosition)
@@ -47,6 +60,22 @@ namespace Microsoft.PowerShell.EditorServices.Extensions
             this.InsertText(
                 newText,
                 new BufferRange(insertPosition, insertPosition));
+        }
+
+        public void InsertText(
+            string newText,
+            int startLine,
+            int startColumn,
+            int endLine,
+            int endColumn)
+        {
+            this.InsertText(
+                newText,
+                new BufferRange(
+                    startLine,
+                    startColumn,
+                    endLine,
+                    endColumn));
         }
 
         public void InsertText(string newText, BufferRange insertRange)
@@ -74,13 +103,22 @@ namespace Microsoft.PowerShell.EditorServices.Extensions
             BufferRange selectedRange)
         {
             this.editorOperations = editorOperations;
-            this.CurrentFile = new FileContext(currentFile, editorOperations);
+            this.CurrentFile = new FileContext(currentFile, this, editorOperations);
             this.SelectedRange = selectedRange;
             this.CursorPosition = cursorPosition;
         }
 
-        public void SetSelection(BufferRange selectionRange)
+        public void SetSelection(
+            int startLine,
+            int startColumn,
+            int endLine,
+            int endColumn)
         {
+            BufferRange selectionRange =
+                new BufferRange(
+                    startLine, startColumn,
+                    endLine, endColumn);
+
             this.editorOperations
                 .SetSelection(selectionRange)
                 .Wait();

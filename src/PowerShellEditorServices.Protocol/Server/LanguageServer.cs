@@ -23,16 +23,31 @@ namespace Microsoft.PowerShell.EditorServices.Protocol.Server
 {
     internal class LanguageServerEditorOperations : IEditorOperations
     {
+        private EditorSession editorSession;
         private IMessageSender messageSender;
 
-        public LanguageServerEditorOperations(IMessageSender messageSender)
+        public LanguageServerEditorOperations(
+            EditorSession editorSession,
+            IMessageSender messageSender)
         {
+            this.editorSession = editorSession;
             this.messageSender = messageSender;
         }
 
-        public Task InsertText(string filePath, string text, BufferRange insertRange)
+        public async Task<EditorContext> GetEditorContext()
         {
-            return this.messageSender.SendRequest(
+            ClientEditorContext clientContext =
+                await this.messageSender.SendRequest(
+                    GetEditorContextRequest.Type,
+                    new GetEditorContextRequest(),
+                    true);
+
+            return this.ConvertClientEditorContext(clientContext);
+        }
+
+        public async Task InsertText(string filePath, string text, BufferRange insertRange)
+        {
+            await this.messageSender.SendRequest(
                 InsertTextRequest.Type,
                 new InsertTextRequest
                 {
@@ -52,7 +67,9 @@ namespace Microsoft.PowerShell.EditorServices.Protocol.Server
                                 Character = insertRange.End.Column - 1
                             }
                         }
-                }, true);
+                }, false);
+
+            // TODO: Set the last param back to true!
         }
 
         public Task SetSelection(BufferRange selectionRange)
@@ -77,6 +94,23 @@ namespace Microsoft.PowerShell.EditorServices.Protocol.Server
                         }
                 }, true);
         }
+
+        public EditorContext ConvertClientEditorContext(
+            ClientEditorContext clientContext)
+        {
+            return
+                new EditorContext(
+                    this,
+                    this.editorSession.Workspace.GetFile(clientContext.CurrentFilePath),
+                    new BufferPosition(
+                        clientContext.CursorPosition.Line + 1,
+                        clientContext.CursorPosition.Character + 1),
+                    new BufferRange(
+                        clientContext.SelectionRange.Start.Line + 1,
+                        clientContext.SelectionRange.Start.Character + 1,
+                        clientContext.SelectionRange.End.Line + 1,
+                        clientContext.SelectionRange.End.Character + 1));
+        }
     }
 
     public class LanguageServer : LanguageServerBase
@@ -86,7 +120,7 @@ namespace Microsoft.PowerShell.EditorServices.Protocol.Server
         private bool profilesLoaded;
         private EditorSession editorSession;
         private OutputDebouncer outputDebouncer;
-        private IEditorOperations editorOperations;
+        private LanguageServerEditorOperations editorOperations;
         private LanguageServerSettings currentSettings = new LanguageServerSettings();
 
         /// <param name="hostDetails">
@@ -113,7 +147,10 @@ namespace Microsoft.PowerShell.EditorServices.Protocol.Server
             this.editorSession.ExtensionService.ExtensionRemoved += ExtensionService_ExtensionRemoved;
 
             // Create the IEditorOperations implementation
-            this.editorOperations = new LanguageServerEditorOperations(this);
+            this.editorOperations =
+                new LanguageServerEditorOperations(
+                    this.editorSession,
+                    this);
 
             // Always send console prompts through the UI in the language service
             // TODO: This will change later once we have a general REPL available
@@ -247,17 +284,8 @@ namespace Microsoft.PowerShell.EditorServices.Protocol.Server
             // TODO: Make some distinction between running in session and not?
 
             EditorContext editorContext =
-                new EditorContext(
-                    this.editorOperations,
-                    this.editorSession.Workspace.GetFile(commandDetails.Context.CurrentFilePath),
-                    new BufferPosition(
-                        commandDetails.Context.CursorPosition.Line + 1,
-                        commandDetails.Context.CursorPosition.Character + 1),
-                    new BufferRange(
-                        commandDetails.Context.SelectionRange.Start.Line + 1,
-                        commandDetails.Context.SelectionRange.Start.Character + 1,
-                        commandDetails.Context.SelectionRange.End.Line + 1,
-                        commandDetails.Context.SelectionRange.End.Character + 1));
+                this.editorOperations.ConvertClientEditorContext(
+                    commandDetails.Context);
 
             await this.editorSession.ExtensionService.InvokeCommand(
                 commandDetails.Name,

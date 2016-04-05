@@ -9,6 +9,8 @@ namespace Microsoft.PowerShell.EditorServices.Extensions
     /// </summary>
     public interface IEditorOperations
     {
+        Task<EditorContext> GetEditorContext();
+
         Task InsertText(string filePath, string insertText, BufferRange insertRange);
 
         Task SetSelection(BufferRange selectionRange);
